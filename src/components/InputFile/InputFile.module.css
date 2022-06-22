@@ -1,0 +1,11 @@
+.container {
+  background-color: rgb(41, 111, 240);
+  color: white;
+  min-width: 80px;
+}
+
+.container a {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+}
