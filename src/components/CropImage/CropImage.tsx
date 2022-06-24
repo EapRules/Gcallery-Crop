@@ -21,8 +21,25 @@ const CropImage: FC<Props> = ({ imgUrl }) => {
   );
 
   const onCrop = async () => {
-    const croppedImage = await getCroppedImg(imgUrl, croppedAreaPixels);
-    setCroppedImg(croppedImage);
+    const croppedImage: any = await getCroppedImg(imgUrl, croppedAreaPixels);
+    
+    const data = new FormData();
+    data.append("file", croppedImage);
+    fetch("https://us-central1-react-ecommerce-8b79b.cloudfunctions.net/api1/upload", {
+      method: "POST",
+      body: data,
+      redirect: 'follow'
+    })
+      .then(
+        (response) => response.json() // if the response is a JSON object
+      )
+      .then(
+        (success) => console.log(success) // Handle the success response object
+      )
+      .catch(
+        (error) => console.log(error) // Handle the error response object
+      );
+    //setCroppedImg(croppedImage);
   };
 
   return (
@@ -40,10 +57,22 @@ const CropImage: FC<Props> = ({ imgUrl }) => {
             onZoomChange={setZoom}
           />
         </div>
-        <div style={{ padding: 20 }}>
+        <div className={styles.rangeContainer}>
+          <input
+            type="range"
+            value={zoom}
+            min={1}
+            max={3}
+            step={0.1}
+            aria-labelledby="Zoom"
+            onChange={(e: any) => {
+              setZoom(e.target.value);
+            }}
+          />
+        </div>
+        <div className={styles.buttonsContainer}>
           <button onClick={onCrop}>Save</button>
         </div>
-        <img src={croppedImg} width={200} height={200} alt="cropped" />
       </div>
     </div>
   );
